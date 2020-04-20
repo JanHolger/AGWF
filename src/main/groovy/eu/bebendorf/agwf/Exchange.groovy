@@ -1,5 +1,7 @@
 package eu.bebendorf.agwf
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import eu.bebendorf.agwf.helper.HttpMethod
 
 import javax.servlet.http.HttpServletRequest
@@ -7,6 +9,7 @@ import javax.servlet.http.HttpServletResponse
 import java.nio.charset.StandardCharsets
 
 class Exchange {
+    private Gson GSON = new GsonBuilder().create()
     final HttpMethod method
     final String path
     Map<String, Object> pathVariables
@@ -19,6 +22,28 @@ class Exchange {
         this.response = response
         this.path = request.getPathInfo()
         method = HttpMethod.valueOf(request.getMethod())
+    }
+    def <T> T getBody(Class<T> clazz){
+        String body = new String(read(), StandardCharsets.UTF_8)
+        if(clazz == String.class)
+            return body
+        GSON.fromJson(body, clazz)
+    }
+    String getContentType(){
+        request.contentType
+    }
+    byte[] read(){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream()
+        try {
+            InputStream is = request.getInputStream()
+            byte [] data = new byte[1024]
+            int r
+            while (is.available() > 0){
+                r = is.read(data)
+                baos.write(data, 0, r)
+            }
+        }catch(IOException ex){}
+        baos.toByteArray()
     }
     void write(String data){
         write(data.getBytes(StandardCharsets.UTF_8))
