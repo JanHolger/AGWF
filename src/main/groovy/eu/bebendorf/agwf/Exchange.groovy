@@ -28,6 +28,7 @@ class Exchange {
         if(clazz == String.class)
             return body
         GSON.fromJson(body, clazz)
+        
     }
     String getContentType(){
         request.contentType
