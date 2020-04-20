@@ -39,6 +39,9 @@ class Exchange {
         }
         response.setHeader(header, value)
     }
+    void status(int code){
+        response.setStatus(code)
+    }
     String header(String header){
         request.getHeader(header)
     }
