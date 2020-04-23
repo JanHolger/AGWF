@@ -117,6 +117,7 @@ class WebService implements RouteParamTransformerProvider {
             }
             exchange.write(transformResponse(notFoundHandler.handle(exchange)))
         }catch(Throwable ex){
+            ex.printStackTrace()
             exchange.write(exceptionHandler.handleBytes(exchange, ex))
         }
         exchange.close()
