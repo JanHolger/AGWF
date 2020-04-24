@@ -5,10 +5,10 @@ import java.nio.charset.StandardCharsets
 interface ExceptionHandler {
     def handle(Exchange exchange, Throwable ex);
     default byte[] handleBytes(Exchange exchange, Throwable ex){
-        handle(exchange, ex).getBytes(StandardCharsets.UTF_8)
+        handle(exchange, ex).toString().getBytes(StandardCharsets.UTF_8)
     }
     static class DefaultExceptionHandler implements ExceptionHandler {
-        String handle(Exchange exchange, Throwable ex) {
+        def handle(Exchange exchange, Throwable ex) {
             'An internal server error occured! Please contact the server administrator in case you think this is a problem.'
         }
     }
