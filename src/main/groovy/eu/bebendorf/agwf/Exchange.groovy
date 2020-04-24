@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets
 
 class Exchange {
     private Gson GSON = new GsonBuilder().create()
+    final WebService service
     final HttpMethod method
     final String path
     Map<String, Object> pathVariables
@@ -17,7 +18,8 @@ class Exchange {
     private HttpServletRequest request
     private HttpServletResponse response
     private Map<String, Object> attributes = [:]
-    Exchange(HttpServletRequest request, HttpServletResponse response){
+    Exchange(WebService service, HttpServletRequest request, HttpServletResponse response){
+        this.service = service
         this.request = request
         this.response = response
         this.path = request.getPathInfo()

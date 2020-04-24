@@ -1,11 +1,9 @@
 package eu.bebendorf.agwf
 
-import java.nio.charset.StandardCharsets
-
 interface ExceptionHandler {
     def handle(Exchange exchange, Throwable ex);
     default byte[] handleBytes(Exchange exchange, Throwable ex){
-        handle(exchange, ex).toString().getBytes(StandardCharsets.UTF_8)
+        exchange.service.transformResponse(handle(exchange, ex))
     }
     static class DefaultExceptionHandler implements ExceptionHandler {
         def handle(Exchange exchange, Throwable ex) {

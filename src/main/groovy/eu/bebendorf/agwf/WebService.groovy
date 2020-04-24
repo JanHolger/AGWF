@@ -117,7 +117,6 @@ class WebService implements RouteParamTransformerProvider {
             }
             exchange.write(transformResponse(notFoundHandler.handle(exchange)))
         }catch(Throwable ex){
-            ex.printStackTrace()
             exchange.write(exceptionHandler.handleBytes(exchange, ex))
         }
         exchange.close()
@@ -127,7 +126,7 @@ class WebService implements RouteParamTransformerProvider {
         routeParamTransformers
     }
 
-    private byte[] transformResponse(Object object){
+    byte[] transformResponse(Object object){
         for(t in responseTransformers){
             byte[] res = t.transformBytes(object)
             if(res != null)
@@ -138,7 +137,7 @@ class WebService implements RouteParamTransformerProvider {
 
     private class HttpHandler extends AbstractHandler {
         void handle(String s, Request request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException, ServletException {
-            execute(new Exchange(httpServletRequest, httpServletResponse))
+            execute(new Exchange(WebService.this, httpServletRequest, httpServletResponse))
         }
     }
 
