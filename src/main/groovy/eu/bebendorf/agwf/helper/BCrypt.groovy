@@ -18,8 +18,8 @@ class BCrypt {
         return hashBytes(stringToBytes(password), salt)
     }
 
-    private static final int BCRYPT_SALT_LEN = 16;
-    private static final int BLOWFISH_NUM_ROUNDS = 16;
+    private static int BCRYPT_SALT_LEN = 16;
+    private static int BLOWFISH_NUM_ROUNDS = 16;
     private static final int[] P_orig = new int[]{
         0x243f6a88, 0x85a308d3, 0x13198a2e, 0x03707344,
         0xa4093822, 0x299f31d0, 0x082efa98, 0xec4e6c89,
