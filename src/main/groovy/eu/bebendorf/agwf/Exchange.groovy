@@ -95,4 +95,12 @@ class Exchange {
     void attrib(String key, Object value){
         attributes[key] = value
     }
+    String bearerAuth(){
+        String auth = header('Authorization')
+        if(auth == null)
+            return null
+        if(!auth.startsWith('Bearer '))
+            return null
+        auth.substring(7)
+    }
 }
