@@ -22,6 +22,7 @@ class WebService implements RouteParamTransformerProvider {
     private RequestHandler notFoundHandler = new RequestHandler.DefaultNotFoundHandler()
     private ExceptionHandler exceptionHandler = new ExceptionHandler.DefaultExceptionHandler()
     private List<RequestHandler> middleware = []
+    private List<AfterRequestHandler> after = []
     private Server server
     private int port = 8080
 
@@ -52,6 +53,11 @@ class WebService implements RouteParamTransformerProvider {
 
     WebService middleware(RequestHandler handler){
         middleware.add(handler)
+        this
+    }
+
+    WebService after(AfterRequestHandler handler){
+        after.add(handler)
         this
     }
 
@@ -107,6 +113,9 @@ class WebService implements RouteParamTransformerProvider {
                 for(handler in route.handlers){
                     Object response = handler.handle(exchange)
                     if(response != null){
+                        for(afterHandler in after){
+                            response = afterHandler.handleAfter(exchange, response)
+                        }
                         exchange.write(transformResponse(response))
                         exchange.close()
                         return
