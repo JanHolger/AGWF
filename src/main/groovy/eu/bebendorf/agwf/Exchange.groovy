@@ -13,6 +13,7 @@ class Exchange {
     final WebService service
     final HttpMethod method
     final String path
+    private byte[] body
     Map<String, Object> pathVariables
     Map<String, String> parameters = [:]
     private HttpServletRequest request
@@ -26,11 +27,14 @@ class Exchange {
         method = HttpMethod.valueOf(request.getMethod())
     }
     def <T> T getBody(Class<T> clazz){
-        String body = new String(read(), StandardCharsets.UTF_8)
+        if(body == null)
+            body = read()
+        if(clazz == byte[].class)
+            return body
+        String body = new String(body, StandardCharsets.UTF_8)
         if(clazz == String.class)
             return body
         GSON.fromJson(body, clazz)
-
     }
     String getContentType(){
         request.contentType
