@@ -25,7 +25,7 @@ class WebService implements RouteParamTransformerProvider {
     private List<AfterRequestHandler> after = []
     private Server server
     private int port = 8080
-    private List<RequestInterceptor> beforeInterceptors = null
+    private List<RequestInterceptor> beforeInterceptors = []
 
     WebService beforeInterceptor(RequestInterceptor handler){
         beforeInterceptors.add(handler)
