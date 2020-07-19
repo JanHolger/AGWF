@@ -25,6 +25,12 @@ class WebService implements RouteParamTransformerProvider {
     private List<AfterRequestHandler> after = []
     private Server server
     private int port = 8080
+    private List<RequestInterceptor> beforeInterceptors = null
+
+    WebService beforeInterceptor(RequestInterceptor handler){
+        beforeInterceptors.add(handler)
+        this
+    }
 
     WebService get(String pattern, RequestHandler... handlers){
         routes.add(new Route(this, HttpMethod.GET, pattern, Arrays.asList(handlers)))
@@ -98,6 +104,12 @@ class WebService implements RouteParamTransformerProvider {
 
     void execute(Exchange exchange){
         try {
+            for(ic in beforeInterceptors){
+                if(ic.intercept(exchange)){
+                    exchange.close()
+                    return
+                }
+            }
             for(route in routes){
                 exchange.pathVariables = route.match(exchange.method, exchange.path)
                 if(exchange.pathVariables == null)
