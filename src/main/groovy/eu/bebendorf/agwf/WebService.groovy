@@ -1,5 +1,7 @@
 package eu.bebendorf.agwf
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import eu.bebendorf.agwf.helper.HttpMethod
 import eu.bebendorf.agwf.router.DefaultRouteParamTransformer
 import eu.bebendorf.agwf.router.Route
@@ -26,6 +28,7 @@ class WebService implements RouteParamTransformerProvider {
     private Server server
     private int port = 8080
     private List<RequestInterceptor> beforeInterceptors = []
+    public Gson gson = new GsonBuilder().create()
 
     WebService beforeInterceptor(RequestInterceptor handler){
         beforeInterceptors.add(handler)

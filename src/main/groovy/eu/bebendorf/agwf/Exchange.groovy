@@ -1,7 +1,5 @@
 package eu.bebendorf.agwf
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import eu.bebendorf.agwf.helper.HttpMethod
 
 import javax.servlet.http.HttpServletRequest
@@ -9,7 +7,6 @@ import javax.servlet.http.HttpServletResponse
 import java.nio.charset.StandardCharsets
 
 class Exchange {
-    private Gson GSON = new GsonBuilder().create()
     final WebService service
     final HttpMethod method
     final String path
@@ -34,7 +31,7 @@ class Exchange {
         String body = new String(body, StandardCharsets.UTF_8)
         if(clazz == String.class)
             return body
-        GSON.fromJson(body, clazz)
+        service.gson.fromJson(body, clazz)
     }
     String getContentType(){
         request.contentType
