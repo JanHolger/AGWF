@@ -1,6 +1,6 @@
 package eu.bebendorf.agwf.router
 
-import eu.bebendorf.agwf.RequestHandler
+
 import eu.bebendorf.agwf.helper.HttpMethod
 
 import java.util.regex.Matcher
@@ -11,11 +11,11 @@ class Route {
     private HttpMethod method
     private Pattern pattern
     private Map<String, String> variables = [:]
-    private List<RequestHandler> handlers
-    Route(RouteParamTransformerProvider routeParamTransformerProvider, HttpMethod method, String pattern, List<RequestHandler> handlers){
+    private List<Closure> handlers
+    Route(RouteParamTransformerProvider routeParamTransformerProvider, HttpMethod method, String pattern, List<Closure> handlers){
         this(routeParamTransformerProvider, method, pattern, ':', handlers)
     }
-    Route(RouteParamTransformerProvider routeParamTransformerProvider, HttpMethod method, String pattern, String variableDelimiter, List<RequestHandler> handlers){
+    Route(RouteParamTransformerProvider routeParamTransformerProvider, HttpMethod method, String pattern, String variableDelimiter, List<Closure> handlers){
         this.handlers = handlers
         this.method = method
         this.routeParamTransformerProvider = routeParamTransformerProvider
@@ -88,7 +88,7 @@ class Route {
         }
         return null
     }
-    List<RequestHandler> getHandlers(){
+    List<Closure> getHandlers(){
         handlers
     }
     private static regexEscape(String s){

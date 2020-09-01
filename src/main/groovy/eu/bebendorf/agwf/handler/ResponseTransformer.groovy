@@ -1,4 +1,4 @@
-package eu.bebendorf.agwf
+package eu.bebendorf.agwf.handler
 
 import java.nio.charset.StandardCharsets
 

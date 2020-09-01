@@ -2,6 +2,11 @@ package eu.bebendorf.agwf
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import eu.bebendorf.agwf.handler.AfterRequestHandler
+import eu.bebendorf.agwf.handler.DefaultNotFoundHandler
+import eu.bebendorf.agwf.handler.ExceptionHandler
+import eu.bebendorf.agwf.handler.RequestInterceptor
+import eu.bebendorf.agwf.handler.ResponseTransformer
 import eu.bebendorf.agwf.helper.HttpMethod
 import eu.bebendorf.agwf.router.DefaultRouteParamTransformer
 import eu.bebendorf.agwf.router.Route
@@ -21,9 +26,9 @@ class WebService implements RouteParamTransformerProvider {
     private List<Route> routes = []
     private List<RouteParamTransformer> routeParamTransformers = [new DefaultRouteParamTransformer()]
     private List<ResponseTransformer> responseTransformers = []
-    private RequestHandler notFoundHandler = new RequestHandler.DefaultNotFoundHandler()
+    private Closure notFoundHandler = DefaultNotFoundHandler::handle
     private ExceptionHandler exceptionHandler = new ExceptionHandler.DefaultExceptionHandler()
-    private List<RequestHandler> middleware = []
+    private List<Closure> middleware = []
     private List<AfterRequestHandler> after = []
     private Server server
     private int port = 8080
@@ -35,32 +40,32 @@ class WebService implements RouteParamTransformerProvider {
         this
     }
 
-    WebService get(String pattern, RequestHandler... handlers){
+    WebService get(String pattern, Closure... handlers){
         routes.add(new Route(this, HttpMethod.GET, pattern, Arrays.asList(handlers)))
         this
     }
 
-    WebService post(String pattern, RequestHandler... handlers){
+    WebService post(String pattern, Closure... handlers){
         routes.add(new Route(this, HttpMethod.POST, pattern, Arrays.asList(handlers)))
         this
     }
 
-    WebService put(String pattern, RequestHandler... handlers){
+    WebService put(String pattern, Closure... handlers){
         routes.add(new Route(this, HttpMethod.PUT, pattern, Arrays.asList(handlers)))
         this
     }
 
-    WebService delete(String pattern, RequestHandler... handlers){
+    WebService delete(String pattern, Closure... handlers){
         routes.add(new Route(this, HttpMethod.DELETE, pattern, Arrays.asList(handlers)))
         this
     }
 
-    WebService notFound(RequestHandler handler){
+    WebService notFound(Closure handler){
         notFoundHandler = handler
         this
     }
 
-    WebService middleware(RequestHandler handler){
+    WebService middleware(Closure handler){
         middleware.add(handler)
         this
     }
